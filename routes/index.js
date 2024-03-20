@@ -65,8 +65,11 @@ router.post("/favNumber", async (req, res) => {
 });
 
 router.post("/newcontent", async (req, res) => {
-  const {newcontent} = req.body;
-
+  let newcontent = req.body;
+  if(newcontent == null ) {
+    res.status(400).send("newcontent is null");
+    return;
+  }
   await save({
     content: newcontent
   }, "content.json");
