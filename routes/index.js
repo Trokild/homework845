@@ -32,6 +32,19 @@ router.get("/sum/:number1/:number2", async (req, res) => {
   });
 });
 
+router.get("/content", async (req, res) => {
+  let my_file = await s3.getObject({
+    Bucket: "cyclic-fine-puce-alligator-gear-eu-north-1",
+    Key: "content.json",
+  }).promise()
+  const newContent = JSON.parse(my_file.Body)?.content;
+
+  res.json({
+    status: "success",
+    result: newContent,
+  });
+});
+
 router.post("/favNumber", async (req, res) => {
   const {number} = req.body;
   if(number == null ) {
@@ -44,11 +57,27 @@ router.post("/favNumber", async (req, res) => {
   }
   await save({
     favouriteNumber: number
-  });
+  }, "number.json");
   res.json({
     status: "success",
     newFavouriteNumber: number,
   });
 });
+
+router.post("/newcontent", async (req, res) => {
+  const {newcontent} = req.body;
+  if(newcontent == null ) {
+    res.status(400).send("Not provided number");
+    return;
+  }
+  await save({
+    content: newcontent
+  }, "content.json");
+  res.json({
+    status: "success",
+    content: newcontent,
+  });
+});
+
 
 module.exports = router;
