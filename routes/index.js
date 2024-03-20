@@ -66,10 +66,7 @@ router.post("/favNumber", async (req, res) => {
 
 router.post("/newcontent", async (req, res) => {
   const {newcontent} = req.body;
-  if(newcontent == null ) {
-    res.status(400).send("Not provided number");
-    return;
-  }
+
   await save({
     content: newcontent
   }, "content.json");
